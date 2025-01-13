@@ -3,7 +3,7 @@ import { completeQuiz, getQuiz, nextQuestion, previousQuestion } from "@/redux/f
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 
 const QuizControl = () => {
-    const { question, currentQuestionIndex, userAnswers } = useAppSelector(getQuiz);
+    const { questions, currentQuestionIndex, userAnswers } = useAppSelector(getQuiz);
     const dispatch = useAppDispatch();
     const handleNextQuestion = () => {
         dispatch(nextQuestion())
@@ -22,7 +22,7 @@ const QuizControl = () => {
                 className="bg-blue-500 hover:bg-blue-600"
             >Previous</Button>
             {
-                currentQuestionIndex < question.length - 1 ?
+                currentQuestionIndex < questions.length - 1 ?
                     <Button
                         disabled={userAnswers[currentQuestionIndex] == null}
                         onClick={() => handleNextQuestion()}

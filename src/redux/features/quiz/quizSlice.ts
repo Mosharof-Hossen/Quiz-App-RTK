@@ -2,15 +2,31 @@ import { quizData } from '@/Home/QuizData';
 import { RootState } from '@/redux/store';
 import { createSlice } from '@reduxjs/toolkit'
 
-interface TQuiz {
-    question: typeof quizData;
+export interface TQuizState {
+    questions: TQuestion[];
     currentQuestionIndex: number,
     userAnswers: (string | null)[],
     quizComplete: boolean,
 }
 
-const initialState: TQuiz = {
-    question: quizData,
+export type TQuestion = {
+    correctAnswer: string,
+    options: string[];
+    question: string;
+    _id: string
+}
+
+export type TQuiz = {
+    id: string;
+    title: "string";
+    description: string;
+    questions: TQuestion[];
+    createdAt: string;
+    updatedAt: string
+}
+
+const initialState: TQuizState = {
+    questions: [],
     currentQuestionIndex: 0,
     userAnswers: Array(quizData.length).fill(null),
     quizComplete: false,
@@ -25,18 +41,25 @@ export const quizSlice = createSlice({
             const { answer, currentQuestionIndex } = action.payload;
             state.userAnswers[currentQuestionIndex] = answer;
         },
+
         nextQuestion: (state) => {
-            if (state.currentQuestionIndex < state.question.length - 1) {
+            if (state.currentQuestionIndex < state.questions.length - 1) {
                 state.currentQuestionIndex += 1;
             }
         },
+
         previousQuestion: (state) => {
             if (state.currentQuestionIndex > 0) {
                 state.currentQuestionIndex -= 1;
             }
         },
+
         completeQuiz: (state) => {
             state.quizComplete = true;
+        },
+
+        setQuiz: (state, action) => {
+            state.questions = action.payload
         }
     }
 })
@@ -45,5 +68,5 @@ export const getQuiz = (state: RootState) => {
     return state.quizzes
 }
 
-export const { setAnswer, nextQuestion, previousQuestion, completeQuiz } = quizSlice.actions;
+export const { setAnswer, setQuiz, nextQuestion, previousQuestion, completeQuiz } = quizSlice.actions;
 export const quizReducer = quizSlice.reducer;
